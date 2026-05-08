@@ -24,71 +24,14 @@
             background: linear-gradient(135deg, #f37021 0%, #ff8c42 100%);
         }
 
-        .chat-window {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateY(20px);
-            opacity: 0;
-            pointer-events: none;
-            position: fixed;
-            bottom: 90px;
-            right: 16px;
-            left: 16px;
-            width: auto;
-            max-width: 400px;
-            z-index: 100;
-        }
-
-        @media (min-width: 640px) {
-            .chat-window {
-                left: auto;
-                width: 380px;
-            }
-        }
-
-        .chat-window.active {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .message-bubble {
-            max-width: 85%;
-            border-radius: 1.2rem;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.75rem;
-            font-size: 0.875rem;
-            line-height: 1.4;
-        }
-
-        .message-user {
-            background-color: var(--brand-orange);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 0.2rem;
-        }
-
-        .message-bot {
-            background-color: #f1f5f9;
-            color: #1e293b;
-            align-self: flex-start;
-            border-bottom-left-radius: 0.2rem;
-        }
-
         .hero-title {
             font-size: clamp(2.5rem, 12vw, 5rem);
         }
 
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-        .dot {
-            width: 5px;
-            height: 5px;
-            background: #94a3b8;
-            border-radius: 50%;
-            display: inline-block;
-            animation: dotPulse 1s infinite;
+        .counter-badge {
+            background: rgba(243, 112, 33, 0.1);
+            border: 1px solid rgba(243, 112, 33, 0.2);
+            backdrop-blur: sm;
         }
     </style>
 </head>
@@ -207,7 +150,21 @@
     <footer class="bg-slate-900 py-12 text-white px-4">
         <div class="max-w-7xl mx-auto text-center">
             <span class="font-black text-2xl italic uppercase tracking-tighter">MOBTEL<span class="text-orange-500">GSM</span></span>
-            <div class="mt-6 flex flex-col items-center gap-2">
+            
+            <!-- Licznik wejść -->
+            <div class="mt-8 flex justify-center">
+                <div class="counter-badge px-4 py-2 rounded-2xl flex items-center gap-3">
+                    <div class="w-8 h-8 orange-grad rounded-lg flex items-center justify-center text-white text-xs">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Liczba odwiedzin</p>
+                        <p id="visitCounter" class="text-lg font-black text-orange-500 leading-none">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex flex-col items-center gap-2">
                 <a href="mailto:mobtel2@gmail.com" class="text-slate-400 hover:text-orange-500 transition-colors flex items-center gap-2 text-sm font-bold">
                     <i class="fas fa-envelope text-orange-500"></i> mobtel2@gmail.com
                 </a>
@@ -219,136 +176,25 @@
         </div>
     </footer>
 
-    <!-- WIDGET ASYSTENTA AI (PHANTOM) -->
-    <div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end">
-        <div id="chatWindow" class="chat-window bg-white rounded-[2rem] shadow-2xl border border-slate-200 flex flex-col overflow-hidden h-[75vh] max-h-[550px]">
-            <div class="orange-grad p-4 text-white flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div>
-                        <h5 class="font-black text-xs uppercase italic">Pomoc Mobtel</h5>
-                        <p class="text-[9px] font-bold opacity-70 uppercase">Asystent AI (P2)</p>
-                    </div>
-                </div>
-                <button onclick="toggleChat()" class="p-2">
-                    <i class="fas fa-times text-lg"></i>
-                </button>
-            </div>
-
-            <div id="chatContent" class="flex-1 p-4 overflow-y-auto flex flex-col bg-slate-50 gap-2">
-                <div class="message-bubble message-bot">
-                    Cześć! 📱 Jestem nowym asystentem Mobtel GSM. W czym mogę Ci pomóc? Znam nasze godziny otwarcia i lokalizacje!
-                </div>
-            </div>
-
-            <div id="typingIndicator" class="hidden px-5 py-2 text-[10px] text-slate-400 font-bold italic uppercase">
-                Przetwarzam... <span class="dot" style="animation-delay: 0.1s"></span> <span class="dot" style="animation-delay: 0.2s"></span> <span class="dot" style="animation-delay: 0.3s"></span>
-            </div>
-
-            <div class="p-3 bg-white border-t border-slate-100 flex gap-2">
-                <input type="text" id="userInput" placeholder="Zadaj pytanie..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm outline-none">
-                <button onclick="sendMessage()" class="orange-grad text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-
-        <button onclick="toggleChat()" class="orange-grad text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 active:scale-95 transition-all border-4 border-white">
-            <i class="fas fa-comment-dots" id="chatIcon"></i>
-        </button>
-    </div>
-
-    <script type="module">
-        const apiKey = ""; 
-        let chatHistory = [];
-
-        window.toggleChat = function() {
-            const win = document.getElementById('chatWindow');
-            const icon = document.getElementById('chatIcon');
-            win.classList.toggle('active');
-            icon.className = win.classList.contains('active') ? 'fas fa-chevron-down' : 'fas fa-comment-dots';
-        }
-
-        async function callGemini(messages) {
-            const systemPrompt = `Jesteś asystentem Mobtel GSM. 
-            Lokalizacje i godziny (Pon-Sob): 
-            - Sucha Beskidzka: 8:00 - 20:00 (ul. Mickiewicza 36B), 
-            - Żywiec: 9:00 - 20:00 (ul. Zielona 3), 
-            - Świętochłowice: 9:00 - 21:00 (ul. Chorzowska 19). 
-            Serwisujemy iPhone, naprawiamy laptopy, sprzedajemy akcesoria. Kontakt: mobtel2@gmail.com, tel: 504 610 588. Odpowiadaj krótko i po polsku.`;
-            
-            // Przełączenie na model Phantom (gemini-2.5-flash-image-preview)
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
-            
-            for (let i = 0; i < 5; i++) { // Wykładniczy backoff do 5 prób
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: messages,
-                            systemInstruction: { parts: [{ text: systemPrompt }] }
-                        })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    }
-                    
-                    const delay = Math.pow(2, i) * 1000;
-                    await new Promise(r => setTimeout(r, delay));
-                } catch (e) {
-                    if (i === 4) throw e;
-                }
+    <script>
+        // Prosty skrypt licznika oparty o localStorage
+        function updateCounter() {
+            let visits = localStorage.getItem('mobtel_visits');
+            if (!visits) {
+                visits = 1240; // Startowa liczba bazowa dla lepszego wyglądu
             }
-            return null;
-        }
-
-        window.sendMessage = async function() {
-            const input = document.getElementById('userInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            appendMessage('user', text);
-            chatHistory.push({ role: "user", parts: [{ text: text }] });
-            input.value = '';
-
-            const typing = document.getElementById('typingIndicator');
-            typing.classList.remove('hidden');
-
-            try {
-                const responseText = await callGemini(chatHistory);
-                typing.classList.add('hidden');
-
-                if (responseText) {
-                    appendMessage('bot', responseText);
-                    chatHistory.push({ role: "model", parts: [{ text: responseText }] });
-                } else {
-                    throw new Error("Błąd silnika");
-                }
-            } catch (error) {
-                typing.classList.add('hidden');
-                appendMessage('bot', "Chwilowy błąd systemu. Spróbuj ponownie za moment lub napisz na **mobtel2@gmail.com**.");
+            
+            // Sprawdzamy czy to nowa sesja
+            if (!sessionStorage.getItem('session_active')) {
+                visits = parseInt(visits) + 1;
+                localStorage.setItem('mobtel_visits', visits);
+                sessionStorage.setItem('session_active', 'true');
             }
-
-            if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+            
+            document.getElementById('visitCounter').innerText = visits.toLocaleString();
         }
 
-        function appendMessage(role, text) {
-            const container = document.getElementById('chatContent');
-            const div = document.createElement('div');
-            div.className = `message-bubble ${role === 'user' ? 'message-user' : 'message-bot'}`;
-            div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        document.getElementById('userInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+        window.onload = updateCounter;
     </script>
 </body>
 </html>
