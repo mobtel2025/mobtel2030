@@ -239,7 +239,7 @@
     </div>
 
     <script type="module">
-        const apiKey = ""; // Klucz zostanie dostarczony przez środowisko uruchomieniowe
+        const apiKey = ""; // Klucz zostanie automatycznie podstawiony przez środowisko
         
         let chatHistory = [];
 
@@ -255,19 +255,41 @@
             }
         }
 
-        async function fetchWithRetry(url, options, retries = 5, backoff = 1000) {
-            for (let i = 0; i < retries; i++) {
+        async function callGemini(messages) {
+            const systemPrompt = "Jesteś pomocnym asystentem firmy Mobtel GSM (rok założenia 2006). " +
+                                "Lokalizacje: Sucha Beskidzka (Mickiewicza 36B), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3). " +
+                                "Specjalizujemy się w naprawach iPhone i akcesoriach. Odpowiadaj krótko i po polsku.";
+            
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: messages,
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            // Implementacja exponential backoff (5 prób)
+            for (let i = 0; i < 5; i++) {
                 try {
-                    const response = await fetch(url, options);
-                    if (response.ok) return await response.json();
-                    if (response.status !== 429 && response.status < 500) break;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    }
+
+                    if (response.status !== 429 && response.status < 500) {
+                        break;
+                    }
                 } catch (e) {
-                    if (i === retries - 1) throw e;
+                    if (i === 4) throw e;
                 }
-                await new Promise(resolve => setTimeout(resolve, backoff));
-                backoff *= 2;
+                await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
             }
-            throw new Error('Nie udało się połączyć z AI po wielu próbach.');
+            throw new Error("Błąd komunikacji");
         }
 
         window.sendMessage = async function() {
@@ -282,34 +304,22 @@
             const typing = document.getElementById('typingIndicator');
             typing.classList.remove('hidden');
 
-            const systemPrompt = `Jesteś pomocnym asystentem firmy Mobtel GSM (rok założenia 2006).
-            Lokalizacje: Sucha Beskidzka (Mickiewicza 36B - w Intermarché), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3).
-            Oferta: Profesjonalny serwis telefonów (szczególnie iPhone) oraz szeroki wybór akcesoriów.
-            Odpowiadaj uprzejmie i różnorodnie po polsku.`;
-
             try {
-                const data = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: chatHistory,
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
-                });
-                
+                const botResponse = await callGemini(chatHistory);
                 typing.classList.add('hidden');
-                const botText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Przepraszam, nie mogłem wygenerować odpowiedzi.";
                 
-                appendMessage('bot', botText);
-                chatHistory.push({ role: "model", parts: [{ text: botText }] });
-
-                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
-
+                if (botResponse) {
+                    appendMessage('bot', botResponse);
+                    chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+                } else {
+                    throw new Error("Pusta odpowiedź");
+                }
             } catch (error) {
                 typing.classList.add('hidden');
-                console.error('Błąd AI:', error);
-                appendMessage('bot', "Przepraszam, wystąpił błąd połączenia z moim mózgiem AI. Spróbuj ponownie za chwilę lub zadzwoń do nas: 504 610 588.");
+                appendMessage('bot', "Przepraszam, chwilowy problem z połączeniem. Możesz skontaktować się z nami telefonicznie pod numerem **504 610 588**.");
             }
+
+            if (chatHistory.length > 14) chatHistory = chatHistory.slice(-14);
         }
 
         function appendMessage(role, text) {
