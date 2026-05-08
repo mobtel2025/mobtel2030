@@ -239,7 +239,7 @@
     </div>
 
     <script type="module">
-        const apiKey = ""; 
+        const apiKey = ""; // Klucz zostanie dostarczony przez środowisko uruchomieniowe
         
         let chatHistory = [];
 
@@ -253,6 +253,21 @@
             } else {
                 icon.className = 'fas fa-comment-dots';
             }
+        }
+
+        async function fetchWithRetry(url, options, retries = 5, backoff = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return await response.json();
+                    if (response.status !== 429 && response.status < 500) break;
+                } catch (e) {
+                    if (i === retries - 1) throw e;
+                }
+                await new Promise(resolve => setTimeout(resolve, backoff));
+                backoff *= 2;
+            }
+            throw new Error('Nie udało się połączyć z AI po wielu próbach.');
         }
 
         window.sendMessage = async function() {
@@ -270,11 +285,10 @@
             const systemPrompt = `Jesteś pomocnym asystentem firmy Mobtel GSM (rok założenia 2006).
             Lokalizacje: Sucha Beskidzka (Mickiewicza 36B - w Intermarché), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3).
             Oferta: Profesjonalny serwis telefonów (szczególnie iPhone) oraz szeroki wybór akcesoriów.
-            Ważne: Punkt w Suchej Beskidzkiej NIE jest całodobowy.
-            Odpowiadaj uprzejmie i różnorodnie. Unikaj powtarzania dokładnie tych samych formułek w każdej wiadomości.`;
+            Odpowiadaj uprzejmie i różnorodnie po polsku.`;
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const data = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -283,19 +297,18 @@
                     })
                 });
                 
-                const response = await res.json();
                 typing.classList.add('hidden');
-                
-                const botText = response?.candidates?.[0]?.content?.parts?.[0]?.text || "Przepraszam, mam problem z połączeniem. Spróbuj zadać pytanie inaczej.";
+                const botText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Przepraszam, nie mogłem wygenerować odpowiedzi.";
                 
                 appendMessage('bot', botText);
                 chatHistory.push({ role: "model", parts: [{ text: botText }] });
 
-                if (chatHistory.length > 10) chatHistory.shift();
+                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
 
             } catch (error) {
                 typing.classList.add('hidden');
-                appendMessage('bot', "Błąd techniczny. Zadzwoń do nas pod numer 504 610 588.");
+                console.error('Błąd AI:', error);
+                appendMessage('bot', "Przepraszam, wystąpił błąd połączenia z moim mózgiem AI. Spróbuj ponownie za chwilę lub zadzwoń do nas: 504 610 588.");
             }
         }
 
