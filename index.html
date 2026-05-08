@@ -112,7 +112,7 @@
         </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- Sekcja Hero -->
     <section class="relative pt-24 pb-12 sm:pt-40 sm:pb-32 overflow-hidden text-center px-4">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-center mb-4 sm:mb-6">
@@ -133,7 +133,7 @@
         </div>
     </section>
 
-    <!-- Lokalizacje -->
+    <!-- Sekcja Lokalizacje -->
     <section id="lokalizacje" class="py-16 sm:py-24 bg-slate-50 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-10 sm:mb-16">
@@ -191,7 +191,8 @@
     <footer class="bg-slate-900 py-12 sm:py-20 text-white px-4">
         <div class="max-w-7xl mx-auto text-center">
             <span class="font-black text-2xl sm:text-3xl italic tracking-tighter uppercase">MOBTEL<span class="text-orange-500">GSM</span></span>
-            <p class="text-slate-500 font-bold uppercase text-[9px] sm:text-xs tracking-widest mt-4">© 2024 MOBTEL GSM. WSZYSTKIE PRAWA ZASTRZEŻONE.</p>
+            <p class="text-slate-400 font-bold uppercase text-[10px] sm:text-xs tracking-widest mt-2">Rok założenia 2006</p>
+            <p class="text-slate-500 font-bold uppercase text-[9px] sm:text-xs tracking-widest mt-4">© 2026 MOBTEL GSM. WSZYSTKIE PRAWA ZASTRZEŻONE.</p>
         </div>
     </footer>
 
@@ -240,7 +241,6 @@
     <script type="module">
         const apiKey = ""; 
         
-        // Tablica przechowująca historię rozmowy
         let chatHistory = [];
 
         window.toggleChat = function() {
@@ -260,7 +260,6 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Dodaj wiadomość użytkownika do UI i historii
             appendMessage('user', text);
             chatHistory.push({ role: "user", parts: [{ text: text }] });
             input.value = '';
@@ -268,9 +267,10 @@
             const typing = document.getElementById('typingIndicator');
             typing.classList.remove('hidden');
 
-            const systemPrompt = `Jesteś pomocnym asystentem firmy Mobtel GSM.
-            Lokalizacje: Sucha Beskidzka (Mickiewicza 36B), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3).
+            const systemPrompt = `Jesteś pomocnym asystentem firmy Mobtel GSM (rok założenia 2006).
+            Lokalizacje: Sucha Beskidzka (Mickiewicza 36B - w Intermarché), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3).
             Oferta: Profesjonalny serwis telefonów (szczególnie iPhone) oraz szeroki wybór akcesoriów.
+            Ważne: Punkt w Suchej Beskidzkiej NIE jest całodobowy.
             Odpowiadaj uprzejmie i różnorodnie. Unikaj powtarzania dokładnie tych samych formułek w każdej wiadomości.`;
 
             try {
@@ -278,7 +278,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: chatHistory, // Wysyłamy CAŁĄ historię zamiast tylko jednego tekstu
+                        contents: chatHistory,
                         systemInstruction: { parts: [{ text: systemPrompt }] }
                     })
                 });
@@ -288,11 +288,9 @@
                 
                 const botText = response?.candidates?.[0]?.content?.parts?.[0]?.text || "Przepraszam, mam problem z połączeniem. Spróbuj zadać pytanie inaczej.";
                 
-                // Dodaj odpowiedź bota do UI i historii
                 appendMessage('bot', botText);
                 chatHistory.push({ role: "model", parts: [{ text: botText }] });
 
-                // Ograniczenie historii do ostatnich 10 wiadomości (żeby nie przekroczyć limitu tokenów)
                 if (chatHistory.length > 10) chatHistory.shift();
 
             } catch (error) {
@@ -305,7 +303,6 @@
             const container = document.getElementById('chatContent');
             const div = document.createElement('div');
             div.className = `message-bubble ${role === 'user' ? 'message-user' : 'message-bot'}`;
-            // Proste formatowanie markdown (pogrubienie i nowa linia)
             div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
