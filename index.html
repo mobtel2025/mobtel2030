@@ -219,7 +219,7 @@
         </div>
     </footer>
 
-    <!-- WIDGET ASYSTENTA GEMINI -->
+    <!-- WIDGET ASYSTENTA AI (PHANTOM) -->
     <div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end">
         <div id="chatWindow" class="chat-window bg-white rounded-[2rem] shadow-2xl border border-slate-200 flex flex-col overflow-hidden h-[75vh] max-h-[550px]">
             <div class="orange-grad p-4 text-white flex justify-between items-center">
@@ -229,7 +229,7 @@
                     </div>
                     <div>
                         <h5 class="font-black text-xs uppercase italic">Pomoc Mobtel</h5>
-                        <p class="text-[9px] font-bold opacity-70 uppercase">Asystent AI</p>
+                        <p class="text-[9px] font-bold opacity-70 uppercase">Asystent AI (P2)</p>
                     </div>
                 </div>
                 <button onclick="toggleChat()" class="p-2">
@@ -239,7 +239,7 @@
 
             <div id="chatContent" class="flex-1 p-4 overflow-y-auto flex flex-col bg-slate-50 gap-2">
                 <div class="message-bubble message-bot">
-                    Dzień dobry! 📱 Jestem asystentem **Mobtel GSM**. Chcesz sprawdzić godziny otwarcia, naprawić telefon czy szukasz akcesoriów?
+                    Cześć! 📱 Jestem nowym asystentem Mobtel GSM. W czym mogę Ci pomóc? Znam nasze godziny otwarcia i lokalizacje!
                 </div>
             </div>
 
@@ -248,7 +248,7 @@
             </div>
 
             <div class="p-3 bg-white border-t border-slate-100 flex gap-2">
-                <input type="text" id="userInput" placeholder="Twoje pytanie..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm outline-none">
+                <input type="text" id="userInput" placeholder="Zadaj pytanie..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm outline-none">
                 <button onclick="sendMessage()" class="orange-grad text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -277,11 +277,12 @@
             - Sucha Beskidzka: 8:00 - 20:00 (ul. Mickiewicza 36B), 
             - Żywiec: 9:00 - 20:00 (ul. Zielona 3), 
             - Świętochłowice: 9:00 - 21:00 (ul. Chorzowska 19). 
-            Naprawiamy iPhone, sprzedajemy akcesoria. Jeśli masz problem, podaj e-mail: mobtel2@gmail.com lub tel: 504 610 588. Odpowiadaj krótko i konkretnie.`;
+            Serwisujemy iPhone, naprawiamy laptopy, sprzedajemy akcesoria. Kontakt: mobtel2@gmail.com, tel: 504 610 588. Odpowiadaj krótko i po polsku.`;
             
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // Przełączenie na model Phantom (gemini-2.5-flash-image-preview)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
             
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 5; i++) { // Wykładniczy backoff do 5 prób
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -297,13 +298,10 @@
                         return data.candidates?.[0]?.content?.parts?.[0]?.text;
                     }
                     
-                    if (response.status === 403 || response.status === 429 || response.status >= 500) {
-                         await new Promise(r => setTimeout(r, 1000 * (i + 1)));
-                         continue;
-                    }
-                    break;
+                    const delay = Math.pow(2, i) * 1000;
+                    await new Promise(r => setTimeout(r, delay));
                 } catch (e) {
-                    if (i === 2) throw e;
+                    if (i === 4) throw e;
                 }
             }
             return null;
@@ -329,14 +327,14 @@
                     appendMessage('bot', responseText);
                     chatHistory.push({ role: "model", parts: [{ text: responseText }] });
                 } else {
-                    throw new Error("No response");
+                    throw new Error("Błąd silnika");
                 }
             } catch (error) {
                 typing.classList.add('hidden');
-                appendMessage('bot', "Przepraszam, mam problem z połączeniem. Skontaktuj się z nami na **mobtel2@gmail.com** lub zadzwoń **504 610 588**.");
+                appendMessage('bot', "Chwilowy błąd systemu. Spróbuj ponownie za moment lub napisz na **mobtel2@gmail.com**.");
             }
 
-            if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+            if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
         }
 
         function appendMessage(role, text) {
