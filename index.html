@@ -142,29 +142,61 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center">
+                <!-- Sucha Beskidzka -->
+                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center flex flex-col">
                     <div class="w-12 h-12 orange-grad rounded-xl flex items-center justify-center text-white text-xl mx-auto mb-4">
                         <i class="fas fa-location-dot"></i>
                     </div>
                     <h4 class="text-xl font-black mb-1 uppercase italic">Sucha Beskidzka</h4>
                     <p class="text-slate-600 font-bold">ul. Mickiewicza 36B</p>
-                    <p class="text-orange-600 text-[10px] font-black uppercase">(Intermarché)</p>
+                    <p class="text-orange-600 text-[10px] font-black uppercase mb-4">(Intermarché)</p>
+                    
+                    <div class="bg-slate-50 rounded-2xl p-4 mb-6">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Godziny otwarcia:</p>
+                        <p class="text-sm font-black text-slate-700 uppercase italic">Pon - Sob: 8:00 - 20:00</p>
+                    </div>
+
+                    <a href="https://www.google.com/maps/search/?api=1&query=Mobtel+GSM+Sucha+Beskidzka+Mickiewicza+36B" target="_blank" class="mt-auto bg-slate-900 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-map-location-dot"></i> Nawiguj
+                    </a>
                 </div>
-                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center">
+
+                <!-- Świętochłowice -->
+                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center flex flex-col">
                     <div class="w-12 h-12 orange-grad rounded-xl flex items-center justify-center text-white text-xl mx-auto mb-4">
                         <i class="fas fa-location-dot"></i>
                     </div>
                     <h4 class="text-xl font-black mb-1 uppercase italic">Świętochłowice</h4>
                     <p class="text-slate-600 font-bold">ul. Chorzowska 19</p>
-                    <p class="text-orange-600 text-[10px] font-black uppercase">(Omni Centrum)</p>
+                    <p class="text-orange-600 text-[10px] font-black uppercase mb-4">(Omni Centrum)</p>
+                    
+                    <div class="bg-slate-50 rounded-2xl p-4 mb-6">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Godziny otwarcia:</p>
+                        <p class="text-sm font-black text-slate-700 uppercase italic">Pon - Sob: 9:00 - 21:00</p>
+                    </div>
+
+                    <a href="https://www.google.com/maps/search/?api=1&query=Mobtel+GSM+Świętochłowice+Chorzowska+19" target="_blank" class="mt-auto bg-slate-900 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-map-location-dot"></i> Nawiguj
+                    </a>
                 </div>
-                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center">
+
+                <!-- Żywiec -->
+                <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border-2 border-transparent hover:border-orange-500 transition-all text-center flex flex-col">
                     <div class="w-12 h-12 orange-grad rounded-xl flex items-center justify-center text-white text-xl mx-auto mb-4">
                         <i class="fas fa-location-dot"></i>
                     </div>
                     <h4 class="text-xl font-black mb-1 uppercase italic">Żywiec</h4>
                     <p class="text-slate-600 font-bold">ul. Zielona 3</p>
-                    <p class="text-orange-600 text-[10px] font-black uppercase">(Galeria Lider)</p>
+                    <p class="text-orange-600 text-[10px] font-black uppercase mb-4">(Galeria Lider)</p>
+                    
+                    <div class="bg-slate-50 rounded-2xl p-4 mb-6">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Godziny otwarcia:</p>
+                        <p class="text-sm font-black text-slate-700 uppercase italic">Pon - Sob: 9:00 - 20:00</p>
+                    </div>
+
+                    <a href="https://www.google.com/maps/search/?api=1&query=Mobtel+GSM+Żywiec+Zielona+3" target="_blank" class="mt-auto bg-slate-900 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-map-location-dot"></i> Nawiguj
+                    </a>
                 </div>
             </div>
         </div>
@@ -173,9 +205,16 @@
     <!-- Stopka -->
     <footer class="bg-slate-900 py-12 text-white px-4">
         <div class="max-w-7xl mx-auto text-center">
-            <span class="font-black text-2xl italic uppercase">MOBTEL<span class="text-orange-500">GSM</span></span>
-            <p class="text-slate-500 text-xs mt-4">Email: mobtel2@gmail.com</p>
-            <p class="text-slate-500 text-[9px] mt-2">© 2026 MOBTEL GSM. WSZYSTKIE PRAWA ZASTRZEŻONE.</p>
+            <span class="font-black text-2xl italic uppercase tracking-tighter">MOBTEL<span class="text-orange-500">GSM</span></span>
+            <div class="mt-6 flex flex-col items-center gap-2">
+                <a href="mailto:mobtel2@gmail.com" class="text-slate-400 hover:text-orange-500 transition-colors flex items-center gap-2 text-sm font-bold">
+                    <i class="fas fa-envelope text-orange-500"></i> mobtel2@gmail.com
+                </a>
+                <a href="tel:504610588" class="text-slate-400 hover:text-orange-500 transition-colors flex items-center gap-2 text-sm font-bold">
+                    <i class="fas fa-phone text-orange-500"></i> 504 610 588
+                </a>
+            </div>
+            <p class="text-slate-600 text-[9px] mt-8 uppercase tracking-[0.2em]">© 2026 MOBTEL GSM. WSZYSTKIE PRAWA ZASTRZEŻONE.</p>
         </div>
     </footer>
 
@@ -199,12 +238,12 @@
 
             <div id="chatContent" class="flex-1 p-4 overflow-y-auto flex flex-col bg-slate-50 gap-2">
                 <div class="message-bubble message-bot">
-                    Dzień dobry! 📱 Jestem asystentem **Mobtel GSM**. W czym mogę pomóc?
+                    Dzień dobry! 📱 Jestem asystentem **Mobtel GSM**. Chcesz sprawdzić godziny otwarcia, naprawić telefon czy szukasz akcesoriów?
                 </div>
             </div>
 
             <div id="typingIndicator" class="hidden px-5 py-2 text-[10px] text-slate-400 font-bold italic uppercase">
-                Łączę z AI... <span class="dot" style="animation-delay: 0.1s"></span> <span class="dot" style="animation-delay: 0.2s"></span> <span class="dot" style="animation-delay: 0.3s"></span>
+                Przetwarzam... <span class="dot" style="animation-delay: 0.1s"></span> <span class="dot" style="animation-delay: 0.2s"></span> <span class="dot" style="animation-delay: 0.3s"></span>
             </div>
 
             <div class="p-3 bg-white border-t border-slate-100 flex gap-2">
@@ -221,7 +260,7 @@
     </div>
 
     <script type="module">
-        const apiKey = ""; // Klucz zostanie dostarczony przez środowisko
+        const apiKey = ""; 
         let chatHistory = [];
 
         window.toggleChat = function() {
@@ -232,12 +271,16 @@
         }
 
         async function callGemini(messages) {
-            const systemPrompt = "Jesteś asystentem Mobtel GSM. Lokalizacje: Sucha Beskidzka (Mickiewicza 36B), Świętochłowice (Chorzowska 19), Żywiec (Zielona 3). Naprawiamy iPhone, sprzedajemy akcesoria. Jeśli wystąpi błąd połączenia, poproś o kontakt na mobtel2@gmail.com lub 504 610 588.";
+            const systemPrompt = `Jesteś asystentem Mobtel GSM. 
+            Lokalizacje i godziny (Pon-Sob): 
+            - Sucha Beskidzka: 8:00 - 20:00 (ul. Mickiewicza 36B), 
+            - Żywiec: 9:00 - 20:00 (ul. Zielona 3), 
+            - Świętochłowice: 9:00 - 21:00 (ul. Chorzowska 19). 
+            Naprawiamy iPhone, sprzedajemy akcesoria. Jeśli masz problem, podaj e-mail: mobtel2@gmail.com lub tel: 504 610 588. Odpowiadaj krótko i konkretnie.`;
             
-            // Endpoint dla gemini-2.5-flash-preview-09-2025
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -253,14 +296,13 @@
                         return data.candidates?.[0]?.content?.parts?.[0]?.text;
                     }
                     
-                    // Jeśli błąd 403 (częsty w Preview na początku), czekaj i ponów
-                    if (response.status === 403 || response.status === 429) {
-                         await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+                    if (response.status === 403 || response.status === 429 || response.status >= 500) {
+                         await new Promise(r => setTimeout(r, 1000 * (i + 1)));
                          continue;
                     }
                     break;
                 } catch (e) {
-                    if (i === 4) throw e;
+                    if (i === 2) throw e;
                 }
             }
             return null;
@@ -286,11 +328,11 @@
                     appendMessage('bot', responseText);
                     chatHistory.push({ role: "model", parts: [{ text: responseText }] });
                 } else {
-                    throw new Error("Błąd API");
+                    throw new Error("No response");
                 }
             } catch (error) {
                 typing.classList.add('hidden');
-                appendMessage('bot', "Przepraszam, mamy problem techniczny z połączeniem AI. Napisz do nas na **mobtel2@gmail.com** lub zadzwoń: **504 610 588**.");
+                appendMessage('bot', "Przepraszam, mam problem z połączeniem. Skontaktuj się z nami na **mobtel2@gmail.com** lub zadzwoń **504 610 588**.");
             }
 
             if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
