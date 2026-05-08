@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobtel GSM - Serwis i Akcesoria | Asystent Gemini</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        
+        :root {
+            --brand-orange: #f37021; 
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .orange-grad {
+            background: linear-gradient(135deg, #f37021 0%, #ff8c42 100%);
+        }
+
+        .hero-logo {
+            width: 300px;
+            max-width: 80%;
+            height: auto;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.12));
+        }
+
+        .nav-logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .chat-window {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chat-window.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.1rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message-user {
+            background-color: var(--brand-orange);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.2rem;
+        }
+
+        .message-bot {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.2rem;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #94a3b8;
+            border-radius: 50%;
+            display: inline-block;
+            animation: dotPulse 1s infinite;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900">
+
+    <!-- Nawigacja -->
+    <nav class="fixed w-full z-40 bg-white/95 backdrop-blur-md border-b border-orange-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-4">
+                    <img src="12839.jpg" alt="Mobtel" class="nav-logo" onerror="this.style.display='none'">
+                    <span class="font-black text-2xl italic tracking-tighter uppercase">MOBTEL<span class="text-orange-600">GSM</span></span>
+                </div>
+                <div class="hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-widest">
+                    <a href="#serwis" class="hover:text-orange-600 transition-colors">Serwis</a>
+                    <a href="#lokalizacje" class="hover:text-orange-600 transition-colors">Punkty</a>
+                    <a href="tel:504610588" class="orange-grad text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+                        <i class="fas fa-phone"></i> 504 610 588
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative pt-32 pb-20 lg:pt-44 lg:pb-32 overflow-hidden text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center mb-10">
+                <img src="12839.jpg" alt="Mobtel GSM Logo" class="hero-logo">
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-black tracking-tighter leading-none uppercase">
+                Profesjonalny Serwis <br><span class="text-orange-600 italic">Akcesoria Premium</span>
+            </h1>
+            <p class="mt-8 text-xl text-slate-500 max-w-2xl mx-auto font-medium">
+                Masz pytanie o naprawę? Skorzystaj z naszego asystenta AI po prawej stronie!
+            </p>
+        </div>
+    </section>
+
+    <!-- Lokalizacje (skrócone dla przejrzystości) -->
+    <section id="lokalizacje" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-center">
+                <h4 class="text-xl font-black uppercase mb-2">Sucha Beskidzka</h4>
+                <p class="text-slate-500 text-sm italic">ul. Mickiewicza 24</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-center">
+                <h4 class="text-xl font-black uppercase mb-2">Świętochłowice</h4>
+                <p class="text-slate-500 text-sm italic">Punkt Serwisowy</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-center">
+                <h4 class="text-xl font-black uppercase mb-2">Żywiec</h4>
+                <p class="text-slate-500 text-sm italic">Centrum Akcesoriów</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WIDGET ASYSTENTA GEMINI -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Okno Czatu -->
+        <div id="chatWindow" class="chat-window mb-4 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div class="orange-grad p-5 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-black text-sm leading-none uppercase italic">Asystent Gemini</h5>
+                        <p class="text-[10px] font-bold opacity-80 mt-1 uppercase tracking-widest">Ekspert Mobtel GSM</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="hover:rotate-90 transition-transform">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Wiadomości -->
+            <div id="chatContent" class="flex-1 p-5 overflow-y-auto flex flex-col bg-slate-50">
+                <div class="message-bubble message-bot">
+                    Cześć! Jestem asystentem AI firmy **Mobtel GSM**. W czym mogę Ci pomóc? 
+                    <br><br>
+                    Mogę odpowiedzieć na pytania o:
+                    • Naprawy telefonów 🛠️
+                    • Dostępność akcesoriów 📱
+                    • Lokalizacje i kontakt 📍
+                </div>
+            </div>
+
+            <!-- Indykator pisania -->
+            <div id="typingIndicator" class="hidden px-5 py-2 text-xs text-slate-400 font-bold italic">
+                Gemini myśli <span class="dot" style="animation-delay: 0.1s"></span> <span class="dot" style="animation-delay: 0.2s"></span> <span class="dot" style="animation-delay: 0.3s"></span>
+            </div>
+
+            <!-- Input -->
+            <div class="p-4 bg-white border-t border-slate-100 flex gap-2">
+                <input type="text" id="userInput" placeholder="Zadaj pytanie..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                <button onclick="sendMessage()" class="orange-grad text-white w-12 h-12 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Przycisk otwierający -->
+        <button onclick="toggleChat()" class="orange-grad text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition-all border-4 border-white">
+            <i class="fas fa-comment-dots" id="chatIcon"></i>
+        </button>
+    </div>
+
+    <script type="module">
+        const apiKey = ""; // Klucz zostanie dostarczony przez środowisko
+
+        window.toggleChat = function() {
+            const win = document.getElementById('chatWindow');
+            const icon = document.getElementById('chatIcon');
+            win.classList.toggle('active');
+            icon.classList.toggle('fa-comment-dots');
+            icon.classList.toggle('fa-chevron-down');
+        }
+
+        window.sendMessage = async function() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Dodaj wiadomość użytkownika
+            appendMessage('user', text);
+            input.value = '';
+
+            const typing = document.getElementById('typingIndicator');
+            typing.classList.remove('hidden');
+
+            const systemPrompt = `Jesteś asystentem klienta firmy Mobtel GSM. 
+            Twoje cechy: pomocny, profesjonalny, konkretny.
+            Informacje o firmie:
+            - Lokalizacje: Sucha Beskidzka (ul. Mickiewicza 24), Świętochłowice, Żywiec.
+            - Oferta: Akcesoria GSM (etui, szkła, ładowarki - ponad 2000 produktów), serwis telefonów (LCD, baterie, gniazda).
+            - Kontakt: 504 610 588.
+            - Czas naprawy: Większość napraw w 60 minut.
+            Jeśli nie znasz dokładnej ceny, zachęcaj do kontaktu pod numerem telefonu. Odpowiadaj po polsku.`;
+
+            try {
+                let attempts = 0;
+                const maxRetries = 5;
+                let response = null;
+
+                while (attempts < maxRetries) {
+                    try {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: text }] }],
+                                systemInstruction: { parts: [{ text: systemPrompt }] }
+                            })
+                        });
+                        response = await res.json();
+                        if (res.ok) break;
+                    } catch (e) {
+                        attempts++;
+                        await new Promise(r => setTimeout(r, Math.pow(2, attempts) * 1000));
+                    }
+                }
+
+                typing.classList.add('hidden');
+                const botText = response?.candidates?.[0]?.content?.parts?.[0]?.text || "Przepraszam, mam chwilowy problem z połączeniem. Zadwoń do nas pod numer 504 610 588!";
+                appendMessage('bot', botText);
+
+            } catch (error) {
+                typing.classList.add('hidden');
+                appendMessage('bot', "Przepraszam, wystąpił błąd. Spróbuj ponownie później.");
+            }
+        }
+
+        function appendMessage(role, text) {
+            const container = document.getElementById('chatContent');
+            const div = document.createElement('div');
+            div.className = `message-bubble ${role === 'user' ? 'message-user' : 'message-bot'}`;
+            // Uproszczone renderowanie markdown dla pogrubień
+            div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Obsługa Enter
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
